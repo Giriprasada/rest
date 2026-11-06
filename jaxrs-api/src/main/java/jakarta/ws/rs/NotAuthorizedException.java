@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2026 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -142,11 +142,12 @@ public class NotAuthorizedException extends ClientErrorException {
      * Get the list of authorization challenges associated with the exception and applicable to the resource requested by
      * the client.
      *
-     * @return list of authorization challenges applicable to the resource requested by the client.
+     * @return unmodifiable list of authorization challenges applicable to the resource requested by the client.
      */
     public List<Object> getChallenges() {
         if (challenges == null) {
-            this.challenges = getResponse().getHeaders().get(WWW_AUTHENTICATE);
+            final List<Object> headerValues = getResponse().getHeaders().get(WWW_AUTHENTICATE);
+            this.challenges = headerValues == null ? List.of() : List.copyOf(headerValues);
         }
         return challenges;
     }
